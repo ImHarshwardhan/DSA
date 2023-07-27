@@ -1,0 +1,89 @@
+import java.util.EmptyStackException;
+
+class Stack {
+    private int[] array;
+    private int top;
+    private int capacity;
+
+    public Stack(int capacity) {
+        this.array = new int[capacity];
+        this.capacity = capacity;
+        this.top = -1;
+    }
+
+    public boolean isEmpty() {
+        return top == -1;
+    }
+
+    public boolean isFull() {
+        return top == capacity - 1;
+    }
+
+    public void push(int data) {
+        if (isFull()) {
+            throw new StackOverflowError("Stack is full. Cannot push " + data + ".");
+        }
+        array[++top] = data;
+    }
+
+    public int pop() {
+        if (isEmpty()) {
+            throw new EmptyStackException();
+        }
+        return array[top--];
+    }
+
+    public int peek() {
+        if (isEmpty()) {
+            throw new EmptyStackException();
+        }
+        return array[top];
+    }
+
+    public int size() {
+        return top + 1;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Stack stack = new Stack(5);
+
+        // Push elements onto the stack
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
+
+        // Pop elements from the stack
+        System.out.println("Pop: " + stack.pop()); // 3
+        System.out.println("Pop: " + stack.pop()); // 2
+
+        // Push more elements
+        stack.push(4);
+        stack.push(5);
+
+        // Check if the stack is full
+        System.out.println("Is Stack Full? " + stack.isFull()); // true
+
+        // Peek at the top element
+        System.out.println("Peek: " + stack.peek()); // 5
+
+        // Get the size of the stack
+        System.out.println("Size of Stack: " + stack.size()); // 3
+
+        // Pop the remaining elements
+        while (!stack.isEmpty()) {
+            System.out.println("Pop: " + stack.pop());
+        }
+
+        // Check if the stack is empty
+        System.out.println("Is Stack Empty? " + stack.isEmpty()); // true
+
+        // Trying to pop from an empty stack
+        try {
+            System.out.println(stack.pop());
+        } catch (EmptyStackException e) {
+            System.out.println("Cannot pop from an empty stack.");
+        }
+    }
+}
