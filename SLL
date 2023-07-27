@@ -1,0 +1,331 @@
+import java.util.Scanner;
+
+class CustomerNode {
+    int customer_id;
+    String customer_name;
+    String customer_city;
+    int customer_pincode;
+    String customer_mobileno;
+    CustomerNode next;
+
+    public CustomerNode(int id, String name, String city, int pincode, String mobileno) {
+        this.customer_id = id;
+        this.customer_name = name;
+        this.customer_city = city;
+        this.customer_pincode = pincode;
+        this.customer_mobileno = mobileno;
+        this.next = null;
+    }
+}
+
+public class CustomerLinkedList {
+    CustomerNode head;
+    int size;
+
+    public CustomerLinkedList() {
+        head = null;
+        size = 0;
+    }
+
+    public boolean isEmpty() {
+        return head == null;
+    }
+
+    public void insertEnd(int id, String name, String city, int pincode, String mobileno) {
+        CustomerNode newNode = new CustomerNode(id, name, city, pincode, mobileno);
+        if (isEmpty()) {
+            head = newNode;
+        } else {
+            CustomerNode current = head;
+            while (current.next != null) {
+                current = current.next;
+            }
+            current.next = newNode;
+        }
+        size++;
+    }
+
+    public void display() {
+        if (isEmpty()) {
+            System.out.println("Customer List is empty.");
+        } else {
+            CustomerNode current = head;
+            System.out.println("Customer Linked List:");
+            while (current != null) {
+                System.out.println("ID: " + current.customer_id +
+                                   ", Name: " + current.customer_name +
+                                   ", City: " + current.customer_city +
+                                   ", Pincode: " + current.customer_pincode +
+                                   ", Mobile No: " + current.customer_mobileno);
+                current = current.next;
+            }
+        }
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void insertEndByValue(CustomerNode newNode) {
+        if (newNode != null) {
+            if (isEmpty()) {
+                head = newNode;
+            } else {
+                CustomerNode current = head;
+                while (current.next != null) {
+                    current = current.next;
+                }
+                current.next = newNode;
+            }
+            size++;
+        }
+    }
+
+    public void deleteEndByValue() {
+        if (isEmpty()) {
+            System.out.println("Customer List is empty. Cannot delete.");
+        } else if (size == 1) {
+            head = null;
+            size = 0;
+        } else {
+            CustomerNode current = head;
+            CustomerNode prev = null;
+            while (current.next != null) {
+                prev = current;
+                current = current.next;
+            }
+            prev.next = null;
+            size--;
+        }
+    }
+
+    public void insertFrontByValue(CustomerNode newNode) {
+        if (newNode != null) {
+            newNode.next = head;
+            head = newNode;
+            size++;
+        }
+    }
+
+    public void deleteFrontByValue() {
+        if (isEmpty()) {
+            System.out.println("Customer List is empty. Cannot delete.");
+        } else {
+            head = head.next;
+            size--;
+        }
+    }
+
+    public void insertByPosition(int position, CustomerNode newNode) {
+        if (position <= 0 || position > size + 1) {
+            System.out.println("Invalid position.");
+        } else if (position == 1) {
+            insertFrontByValue(newNode);
+        } else if (position == size + 1) {
+            insertEndByValue(newNode);
+        } else {
+            CustomerNode current = head;
+            int currentPosition = 1;
+            while (currentPosition < position - 1) {
+                current = current.next;
+                currentPosition++;
+            }
+            newNode.next = current.next;
+            current.next = newNode;
+            size++;
+        }
+    }
+
+    public void deleteByPosition(int position) {
+        if (position <= 0 || position > size) {
+            System.out.println("Invalid position.");
+        } else if (position == 1) {
+            deleteFrontByValue();
+        } else if (position == size) {
+            deleteEndByValue();
+        } else {
+            CustomerNode current = head;
+            int currentPosition = 1;
+            while (currentPosition < position - 1) {
+                current = current.next;
+                currentPosition++;
+            }
+            current.next = current.next.next;
+            size--;
+        }
+    }
+
+    public CustomerNode searchByName(String name) {
+        CustomerNode current = head;
+        while (current != null) {
+            if (current.customer_name.equals(name)) {
+                return current;
+            }
+            current = current.next;
+        }
+        return null;
+    }
+
+    public void sortByCustomerIdDesc() {
+        if (size <= 1) {
+            return;
+        }
+
+        for (CustomerNode i = head; i != null; i = i.next) {
+            for (CustomerNode j = i.next; j != null; j = j.next) {
+                if (i.customer_id < j.customer_id) {
+                    swapNodes(i, j);
+                }
+            }
+        }
+    }
+
+    private void swapNodes(CustomerNode node1, CustomerNode node2) {
+        int tempId = node1.customer_id;
+        String tempName = node1.customer_name;
+        String tempCity = node1.customer_city;
+        int tempPincode = node1.customer_pincode;
+        String tempMobileno = node1.customer_mobileno;
+
+        node1.customer_id = node2.customer_id;
+        node1.customer_name = node2.customer_name;
+        node1.customer_city = node2.customer_city;
+        node1.customer_pincode = node2.customer_pincode;
+        node1.customer_mobileno = node2.customer_mobileno;
+
+        node2.customer_id = tempId;
+        node2.customer_name = tempName;
+        node2.customer_city = tempCity;
+        node2.customer_pincode = tempPincode;
+        node2.customer_mobileno = tempMobileno;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        CustomerLinkedList customerList = new CustomerLinkedList();
+        int choice;
+
+        do {
+            System.out.println("\n-------- Customer Singly Linked List Menu --------");
+            System.out.println("1. Insert Customer at the End");
+            System.out.println("2. Display Customer Linked List");
+            System.out.println("3. Display Count of Customers");
+            System.out.println("4. Insert Customer at the End (By Value)");
+            System.out.println("5. Delete Customer at the End (By Value)");
+            System.out.println("6. Insert Customer at the Front (By Value)");
+            System.out.println("7. Delete Customer at the Front (By Value)");
+            System.out.println("8. Insert Customer at a Position");
+            System.out.println("9. Delete Customer at a Position");
+            System.out.println("10. Search Customer by Name");
+            System.out.println("11. Sort Customers by Customer ID (Descending Order)");
+            System.out.println("0. Exit");
+            System.out.println("-------------------------------------------");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter Customer ID: ");
+                    int id = scanner.nextInt();
+                    System.out.print("Enter Customer Name: ");
+                    String name = scanner.next();
+                    System.out.print("Enter Customer City: ");
+                    String city = scanner.next();
+                    System.out.print("Enter Customer Pincode: ");
+                    int pincode = scanner.nextInt();
+                    System.out.print("Enter Customer Mobile No.: ");
+                    String mobileno = scanner.next();
+                    customerList.insertEnd(id, name, city, pincode, mobileno);
+                    break;
+                case 2:
+                    customerList.display();
+                    break;
+                case 3:
+                    System.out.println("Count of Customers: " + customerList.getSize());
+                    break;
+                case 4:
+                    System.out.print("Enter Customer ID: ");
+                    int newId = scanner.nextInt();
+                    System.out.print("Enter Customer Name: ");
+                    String newName = scanner.next();
+                    System.out.print("Enter Customer City: ");
+                    String newCity = scanner.next();
+                    System.out.print("Enter Customer Pincode: ");
+                    int newPincode = scanner.nextInt();
+                    System.out.print("Enter Customer Mobile No.: ");
+                    String newMobileno = scanner.next();
+                    CustomerNode newNode = new CustomerNode(newId, newName, newCity, newPincode, newMobileno);
+                    customerList.insertEndByValue(newNode);
+                    break;
+                case 5:
+                    customerList.deleteEndByValue();
+                    break;
+                case 6:
+                    System.out.print("Enter Customer ID: ");
+                    int frontId = scanner.nextInt();
+                    System.out.print("Enter Customer Name: ");
+                    String frontName = scanner.next();
+                    System.out.print("Enter Customer City: ");
+                    String frontCity = scanner.next();
+                    System.out.print("Enter Customer Pincode: ");
+                    int frontPincode = scanner.nextInt();
+                    System.out.print("Enter Customer Mobile No.: ");
+                    String frontMobileno = scanner.next();
+                    CustomerNode frontNode = new CustomerNode(frontId, frontName, frontCity, frontPincode, frontMobileno);
+                    customerList.insertFrontByValue(frontNode);
+                    break;
+                case 7:
+                    customerList.deleteFrontByValue();
+                    break;
+                case 8:
+                    System.out.print("Enter position to insert (1-" + (customerList.getSize() + 1) + "): ");
+                    int position = scanner.nextInt();
+                    System.out.print("Enter Customer ID: ");
+                    int posId = scanner.nextInt();
+                    System.out.print("Enter Customer Name: ");
+                    String posName = scanner.next();
+                    System.out.print("Enter Customer City: ");
+                    String posCity = scanner.next();
+                    System.out.print("Enter Customer Pincode: ");
+                    int posPincode = scanner.nextInt();
+                    System.out.print("Enter Customer Mobile No.: ");
+                    String posMobileno = scanner.next();
+                    CustomerNode posNode = new CustomerNode(posId, posName, posCity, posPincode, posMobileno);
+                    customerList.insertByPosition(position, posNode);
+                    break;
+                case 9:
+                    System.out.print("Enter position to delete (1-" + customerList.getSize() + "): ");
+                    int deletePosition = scanner.nextInt();
+                    customerList.deleteByPosition(deletePosition);
+                    break;
+                case 10:
+                    System.out.print("Enter Customer Name to Search: ");
+                    String searchName = scanner.next();
+                    CustomerNode searchResult = customerList.searchByName(searchName);
+                    if (searchResult != null) {
+                        System.out.println("Search Result for Name '" + searchName + "':");
+                        System.out.println("ID: " + searchResult.customer_id +
+                                           ", Name: " + searchResult.customer_name +
+                                           ", City: " + searchResult.customer_city +
+                                           ", Pincode: " + searchResult.customer_pincode +
+                                           ", Mobile No: " + searchResult.customer_mobileno);
+                    } else {
+                        System.out.println("Customer with Name '" + searchName + "' not found.");
+                    }
+                    break;
+                case 11:
+                    customerList.sortByCustomerIdDesc();
+                    System.out.println("Customer List after sorting by customer_id in descending order:");
+                    customerList.display();
+                    break;
+                case 0:
+                    System.out.println("Exiting the program.");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (choice != 0);
+
+        scanner.close();
+    }
+}
