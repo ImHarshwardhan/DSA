@@ -1,0 +1,335 @@
+class Node {
+    int customer_id;
+    String customer_name;
+    String customer_city;
+    int customer_pincode;
+    String customer_mobileno;
+    Node prev;
+    Node next;
+
+    public Node(int id, String name, String city, int pincode, String mobileno) {
+        this.customer_id = id;
+        this.customer_name = name;
+        this.customer_city = city;
+        this.customer_pincode = pincode;
+        this.customer_mobileno = mobileno;
+        this.prev = null;
+        this.next = null;
+    }
+}
+
+public class CustomerDLL {
+    Node head;
+    Node tail;
+    int size;
+
+    public CustomerDLL() {
+        head = null;
+        tail = null;
+        size = 0;
+    }
+
+    public void insertEnd(int id, String name, String city, int pincode, String mobileno) {
+        Node newNode = new Node(id, name, city, pincode, mobileno);
+        if (size == 0) {
+            head = tail = newNode;
+        } else {
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
+        }
+        size++;
+    }
+
+    public void display() {
+        Node current = head;
+        System.out.println("Customer Doubly Linked List:");
+        while (current != null) {
+            System.out.println("ID: " + current.customer_id +
+                               ", Name: " + current.customer_name +
+                               ", City: " + current.customer_city +
+                               ", Pincode: " + current.customer_pincode +
+                               ", Mobile No: " + current.customer_mobileno);
+            current = current.next;
+        }
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void insertEndByValue(Node newNode) {
+        if (newNode != null) {
+            if (size == 0) {
+                head = tail = newNode;
+            } else {
+                tail.next = newNode;
+                newNode.prev = tail;
+                tail = newNode;
+            }
+            size++;
+        }
+    }
+
+    public void deleteEndByValue() {
+        if (size == 0) {
+            System.out.println("DLL is empty.");
+        } else if (size == 1) {
+            head = tail = null;
+            size = 0;
+        } else {
+            Node secondLast = tail.prev;
+            secondLast.next = null;
+            tail.prev = null;
+            tail = secondLast;
+            size--;
+        }
+    }
+
+    public void insertFrontByValue(Node newNode) {
+        if (newNode != null) {
+            if (size == 0) {
+                head = tail = newNode;
+            } else {
+                newNode.next = head;
+                head.prev = newNode;
+                head = newNode;
+            }
+            size++;
+        }
+    }
+
+    public void deleteFrontByValue() {
+        if (size == 0) {
+            System.out.println("DLL is empty.");
+        } else if (size == 1) {
+            head = tail = null;
+            size = 0;
+        } else {
+            Node second = head.next;
+            head.next = null;
+            second.prev = null;
+            head = second;
+            size--;
+        }
+    }
+
+    public void insertByPosition(int position, Node newNode) {
+        if (position <= 0 || position > size + 1) {
+            System.out.println("Invalid position.");
+        } else if (position == 1) {
+            insertFrontByValue(newNode);
+        } else if (position == size + 1) {
+            insertEndByValue(newNode);
+        } else {
+            Node current = head;
+            for (int i = 1; i < position - 1; i++) {
+                current = current.next;
+            }
+            Node nextNode = current.next;
+            current.next = newNode;
+            newNode.prev = current;
+            newNode.next = nextNode;
+            nextNode.prev = newNode;
+            size++;
+        }
+    }
+
+    public void deleteByPosition(int position) {
+        if (position <= 0 || position > size) {
+            System.out.println("Invalid position.");
+        } else if (position == 1) {
+            deleteFrontByValue();
+        } else if (position == size) {
+            deleteEndByValue();
+        } else {
+            Node current = head;
+            for (int i = 1; i < position; i++) {
+                current = current.next;
+            }
+            Node prevNode = current.prev;
+            Node nextNode = current.next;
+            current.prev = null;
+            current.next = null;
+            prevNode.next = nextNode;
+            nextNode.prev = prevNode;
+            size--;
+        }
+    }
+
+    public Node searchByName(String name) {
+        Node current = head;
+        while (current != null) {
+            if (current.customer_name.equals(name)) {
+                return current;
+            }
+            current = current.next;
+        }
+        return null;
+    }
+
+    public void sortByCustomerIdDesc() {
+        if (size <= 1) {
+            return;
+        }
+
+        for (Node i = head; i != null; i = i.next) {
+            for (Node j = i.next; j != null; j = j.next) {
+                if (i.customer_id < j.customer_id) {
+                    swapNodes(i, j);
+                }
+            }
+        }
+    }
+
+    private void swapNodes(Node node1, Node node2) {
+        int tempId = node1.customer_id;
+        String tempName = node1.customer_name;
+        String tempCity = node1.customer_city;
+        int tempPincode = node1.customer_pincode;
+        String tempMobileno = node1.customer_mobileno;
+
+        node1.customer_id = node2.customer_id;
+        node1.customer_name = node2.customer_name;
+        node1.customer_city = node2.customer_city;
+        node1.customer_pincode = node2.customer_pincode;
+        node1.customer_mobileno = node2.customer_mobileno;
+
+        node2.customer_id = tempId;
+        node2.customer_name = tempName;
+        node2.customer_city = tempCity;
+        node2.customer_pincode = tempPincode;
+        node2.customer_mobileno = tempMobileno;
+    }
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        CustomerDLL customerDLL = new CustomerDLL();
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("-------- Customer Doubly Linked List Menu --------");
+            System.out.println("1. Insert Customer at the End");
+            System.out.println("2. Display Customer Doubly Linked List");
+            System.out.println("3. Display Count of Customers");
+            System.out.println("4. Insert Customer at the End (By Value)");
+            System.out.println("5. Delete Customer at the End (By Value)");
+            System.out.println("6. Insert Customer at the Front (By Value)");
+            System.out.println("7. Delete Customer at the Front (By Value)");
+            System.out.println("8. Insert Customer at a Position");
+            System.out.println("9. Delete Customer at a Position");
+            System.out.println("10. Search Customer by Name");
+            System.out.println("11. Sort Customers by Customer ID (Descending Order)");
+            System.out.println("0. Exit");
+            System.out.println("-------------------------------------------");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter Customer ID: ");
+                    int id = scanner.nextInt();
+                    System.out.print("Enter Customer Name: ");
+                    String name = scanner.next();
+                    System.out.print("Enter Customer City: ");
+                    String city = scanner.next();
+                    System.out.print("Enter Customer Pincode: ");
+                    int pincode = scanner.nextInt();
+                    System.out.print("Enter Customer Mobile No.: ");
+                    String mobileno = scanner.next();
+                    customerDLL.insertEnd(id, name, city, pincode, mobileno);
+                    break;
+                case 2:
+                    customerDLL.display();
+                    break;
+                case 3:
+                    System.out.println("Count of Customers: " + customerDLL.getSize());
+                    break;
+                case 4:
+                    System.out.print("Enter Customer ID: ");
+                    int newId = scanner.nextInt();
+                    System.out.print("Enter Customer Name: ");
+                    String newName = scanner.next();
+                    System.out.print("Enter Customer City: ");
+                    String newCity = scanner.next();
+                    System.out.print("Enter Customer Pincode: ");
+                    int newPincode = scanner.nextInt();
+                    System.out.print("Enter Customer Mobile No.: ");
+                    String newMobileno = scanner.next();
+                    Node newNode = new Node(newId, newName, newCity, newPincode, newMobileno);
+                    customerDLL.insertEndByValue(newNode);
+                    break;
+                case 5:
+                    customerDLL.deleteEndByValue();
+                    break;
+                case 6:
+                    System.out.print("Enter Customer ID: ");
+                    int frontId = scanner.nextInt();
+                    System.out.print("Enter Customer Name: ");
+                    String frontName = scanner.next();
+                    System.out.print("Enter Customer City: ");
+                    String frontCity = scanner.next();
+                    System.out.print("Enter Customer Pincode: ");
+                    int frontPincode = scanner.nextInt();
+                    System.out.print("Enter Customer Mobile No.: ");
+                    String frontMobileno = scanner.next();
+                    Node frontNode = new Node(frontId, frontName, frontCity, frontPincode, frontMobileno);
+                    customerDLL.insertFrontByValue(frontNode);
+                    break;
+                case 7:
+                    customerDLL.deleteFrontByValue();
+                    break;
+                case 8:
+                    System.out.print("Enter position to insert (1-" + (customerDLL.getSize() + 1) + "): ");
+                    int position = scanner.nextInt();
+                    System.out.print("Enter Customer ID: ");
+                    int posId = scanner.nextInt();
+                    System.out.print("Enter Customer Name: ");
+                    String posName = scanner.next();
+                    System.out.print("Enter Customer City: ");
+                    String posCity = scanner.next();
+                    System.out.print("Enter Customer Pincode: ");
+                    int posPincode = scanner.nextInt();
+                    System.out.print("Enter Customer Mobile No.: ");
+                    String posMobileno = scanner.next();
+                    Node posNode = new Node(posId, posName, posCity, posPincode, posMobileno);
+                    customerDLL.insertByPosition(position, posNode);
+                    break;
+                case 9:
+                    System.out.print("Enter position to delete (1-" + customerDLL.getSize() + "): ");
+                    int deletePosition = scanner.nextInt();
+                    customerDLL.deleteByPosition(deletePosition);
+                    break;
+                case 10:
+                    System.out.print("Enter Customer Name to Search: ");
+                    String searchName = scanner.next();
+                    Node searchResult = customerDLL.searchByName(searchName);
+                    if (searchResult != null) {
+                        System.out.println("Search Result for Name '" + searchName + "':");
+                        System.out.println("ID: " + searchResult.customer_id +
+                                ", Name: " + searchResult.customer_name +
+                                ", City: " + searchResult.customer_city +
+                                ", Pincode: " + searchResult.customer_pincode +
+                                ", Mobile No: " + searchResult.customer_mobileno);
+                    } else {
+                        System.out.println("Customer with Name '" + searchName + "' not found.");
+                    }
+                    break;
+                case 11:
+                    customerDLL.sortByCustomerIdDesc();
+                    System.out.println("DLL after sorting by customer_id in descending order:");
+                    customerDLL.display();
+                    break;
+                case 0:
+                    System.out.println("Exiting the program.");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (choice != 0);
+        scanner.close();
+    }
+}
