@@ -1,0 +1,100 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class CustomQueue<T> {
+    private Queue<T> items;
+
+    public CustomQueue() {
+        items = new LinkedList<>();
+    }
+
+    public boolean isEmpty() {
+        return items.isEmpty();
+    }
+
+    public void insert(T item) {
+        items.add(item);
+    }
+
+    public T delete() {
+        if (!isEmpty()) {
+            return items.poll();
+        } else {
+            System.out.println("Queue is empty.");
+            return null;
+        }
+    }
+
+    public void display() {
+        if (!isEmpty()) {
+            System.out.println("Queue elements:");
+            for (T item : items) {
+                System.out.println(item);
+            }
+        } else {
+            System.out.println("Queue is empty.");
+        }
+    }
+
+    public void update(T oldValue, T newValue) {
+        if (items.contains(oldValue)) {
+            items.remove(oldValue);
+            items.add(newValue);
+            System.out.println("Updated " + oldValue + " to " + newValue + ".");
+        } else {
+            System.out.println(oldValue + " not found in the queue.");
+        }
+    }
+
+    public void search(T value) {
+        if (items.contains(value)) {
+            System.out.println(value + " found in the queue.");
+        } else {
+            System.out.println(value + " not found in the queue.");
+        }
+    }
+
+    public int countSearchElement(T value) {
+        int count = 0;
+        for (T item : items) {
+            if (item.equals(value)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public static void main(String[] args) {
+        CustomQueue<Integer> queue = new CustomQueue<>();
+
+        // Inserting elements into the queue
+        queue.insert(1);
+        queue.insert(2);
+        queue.insert(3);
+        queue.insert(2); // Adding a duplicate element for testing search and count
+
+        // Display the queue elements
+        queue.display();
+
+        // Deleting elements from the queue
+        Integer deletedItem = queue.delete();
+        if (deletedItem != null) {
+            System.out.println("Deleted item: " + deletedItem);
+        }
+
+        // Display the updated queue
+        queue.display();
+
+        // Updating elements in the queue
+        queue.update(2, 4); // Changing the first occurrence of 2 to 4
+        queue.display();
+
+        // Searching for elements in the queue
+        queue.search(3);
+        queue.search(5); // 5 is not in the queue
+
+        // Counting occurrences of elements in the queue
+        int count = queue.countSearchElement(2);
+        System.out.println("Count of 2 in the queue: " + count);
+    }
+}
