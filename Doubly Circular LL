@@ -1,0 +1,136 @@
+public class DoublyCircularLinkedList {
+
+    private Node head;
+    private Node tail;
+    private int size;
+
+    // Node class representing individual nodes in the list
+    private class Node {
+        int data;
+        Node prev;
+        Node next;
+
+        Node(int data) {
+            this.data = data;
+            this.prev = null;
+            this.next = null;
+        }
+    }
+
+    // Constructor to initialize an empty Doubly Circular Linked List
+    public DoublyCircularLinkedList() {
+        head = null;
+        tail = null;
+        size = 0;
+    }
+
+    // Method to check if the list is empty
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    // Method to get the size of the list
+    public int getSize() {
+        return size;
+    }
+
+    // Method to add a node at the beginning of the list
+    public void addAtBeginning(int data) {
+        Node newNode = new Node(data);
+        if (isEmpty()) {
+            head = newNode;
+            tail = newNode;
+            newNode.next = newNode;
+            newNode.prev = newNode;
+        } else {
+            newNode.next = head;
+            newNode.prev = tail;
+            head.prev = newNode;
+            tail.next = newNode;
+            head = newNode;
+        }
+        size++;
+    }
+
+    // Method to add a node at the end of the list
+    public void addAtEnd(int data) {
+        Node newNode = new Node(data);
+        if (isEmpty()) {
+            head = newNode;
+            tail = newNode;
+            newNode.next = newNode;
+            newNode.prev = newNode;
+        } else {
+            newNode.next = head;
+            newNode.prev = tail;
+            tail.next = newNode;
+            head.prev = newNode;
+            tail = newNode;
+        }
+        size++;
+    }
+
+    // Method to remove a node from the beginning of the list
+    public void removeFromBeginning() {
+        if (isEmpty()) {
+            System.out.println("The list is empty. No elements to remove.");
+            return;
+        }
+        if (size == 1) {
+            head = null;
+            tail = null;
+        } else {
+            head = head.next;
+            head.prev = tail;
+            tail.next = head;
+        }
+        size--;
+    }
+
+    // Method to remove a node from the end of the list
+    public void removeFromEnd() {
+        if (isEmpty()) {
+            System.out.println("The list is empty. No elements to remove.");
+            return;
+        }
+        if (size == 1) {
+            head = null;
+            tail = null;
+        } else {
+            tail = tail.prev;
+            tail.next = head;
+            head.prev = tail;
+        }
+        size--;
+    }
+
+    // Method to display the elements of the list
+    public void display() {
+        if (isEmpty()) {
+            System.out.println("The list is empty.");
+            return;
+        }
+
+        Node current = head;
+        do {
+            System.out.print(current.data + " ");
+            current = current.next;
+        } while (current != head);
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        DoublyCircularLinkedList list = new DoublyCircularLinkedList();
+
+        list.addAtBeginning(5);
+        list.addAtBeginning(3);
+        list.addAtEnd(7);
+
+        list.display(); // Output: 3 5 7
+
+        list.removeFromBeginning();
+        list.removeFromEnd();
+
+        list.display(); // Output: 5
+    }
+}
